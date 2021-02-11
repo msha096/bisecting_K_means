@@ -43,7 +43,9 @@ def k_means(cluster, n, feature_table, selection):
         features = pd.DataFrame(pca.fit_transform(feature_table))
         X = features.loc[cluster] # X is the local features
     else:
-        X = feature_table.loc[cluster]
+        pca50 = PCA(n_components = 50)
+        features = pd.DataFrame(pca50.fit_transform(feature_table))
+        X = features.loc[cluster]
     
     kmeans = KMeans(n_clusters = 2, n_init = 30, max_iter = 500)
     kmeans.fit(X)
@@ -62,24 +64,22 @@ def k_means(cluster, n, feature_table, selection):
             cluster_id2.append(cluster[i])
         
     # comput the squre distance
-    if selection:
-        d1 = compute_distance(c[0],cluster_id1, features)
-        d2 = compute_distance(c[1],cluster_id2, features)
-    else:
-        d1 = compute_distance(c[0],cluster_id1, feature_table)
-        d2 = compute_distance(c[1],cluster_id2, feature_table)
+    
+    d1 = compute_distance(c[0],cluster_id1, features)
+    d2 = compute_distance(c[1],cluster_id2, features)
+   
     return (-d1,cluster_id1), (-d2,cluster_id2)
 
 
 
-def linear_n(n, feature_table):
+def linear_n(cluster_size, total_size):
     ''' 
     The algorithm to reduce the feature dimension.
-    n is positive-correlated with cluster size
+    return: n is positive-correlated with cluster ratio
     '''
-    cluster_ratio = n/len(feature_table)
-    print('cluster_raio',cluster_ratio)
-    n = max(3,int(150 * cluster_ratio))
+    cluster_ratio = cluster_size / len(total_size)
+    print('cluster_raio', cluster_ratio)
+    n = max(3, int(50 * cluster_ratio))
     print('PCA to '+ str(n))
     return n
 
@@ -126,4 +126,6 @@ def tunning_k(max_k, feature, selection):
 if __name__ == '__main__':
     current_path = os.path.dirname(__file__)
     tf_idf = pd.read_csv(current_path + '/data/tf_idf_1k.csv')
+    # tf_idf.drop('Unnamed: 0', axis = 1, inplace = True)
+    # print(tf_idf.head(5))
     tunning_k(max_k = 12, feature = tf_idf, selection = True)
