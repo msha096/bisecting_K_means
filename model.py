@@ -1,12 +1,12 @@
 import pandas as pd 
 import numpy as np
+
 from sklearn.decomposition import PCA
 from sklearn.cluster import KMeans
-from sklearn.metrics import davies_bouldin_score
-from sklearn.metrics import silhouette_samples, silhouette_score
+from sklearn.metrics import davies_bouldin_score, silhouette_samples, silhouette_score
+
 import matplotlib.pyplot as plt 
 import seaborn as sns
-from sklearn.metrics import silhouette_samples, silhouette_score
 import heapq
 import os
 
